@@ -17,13 +17,15 @@ const ExampleHooks = () => {
   const [{ removeText, addText }, setGlobal] = useContext(GlobalContext);
 
   useEffect(() => {
+    let isSubscribed = true;
     SampleData()
       .then(data => {
-        setText(data.defaultState);
+        if (isSubscribed) setText(data.defaultState);
       })
       .catch(error => {
-        console.error(error);
+        if (isSubscribed) console.error(error);
       });
+    return () => (isSubscribed = false);
   }, [textCustomHook1]);
 
   return (

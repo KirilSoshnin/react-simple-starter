@@ -14,6 +14,8 @@ class ExampleClass extends React.Component {
     };
 
     this.toggleModal = this.toggleModal.bind(this);
+
+    this.mounted = false;
   }
 
   toggleModal() {
@@ -21,16 +23,24 @@ class ExampleClass extends React.Component {
   }
 
   componentDidMount() {
+    this.mounted = true;
+
     SampleData()
       .then(data => {
-        this.setState({
-          text: data.defaultState,
-          loading: false
-        });
+        if (this.mounted) {
+          this.setState({
+            text: data.defaultState,
+            loading: false
+          });
+        }
       })
       .catch(error => {
-        console.error(error);
+        if (this.mounted) console.error(error);
       });
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {
